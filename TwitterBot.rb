@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 $KCODE = "UTF8"
 require 'rubygems'
 require 'open-uri'
@@ -5,23 +6,24 @@ require 'oauth'
 require 'rss'
 require 'cgi'
 
-#-------------------------------------------------------------------------------------------------------------クラス：ツイッター接続関連
+#--------- TwitterBot ---------
 class TwitterBot
 
+  # ...の部分を適切な文字列に置き換える
   def initialize
     @consumer = OAuth::Consumer.new(
-      @CONSUMER_KEY = ""
-      @CONSUMER_SECRET = ""
+      @CONSUMER_KEY = ".......................................",
+      @CONSUMER_SECRET = ".....................................",
       :site => 'https://twitter.com'
     )
     @access_token = OAuth::AccessToken.new(
       @consumer,
-      @ACCESS_TOKEN = ""
-      @ACCESS_TOKEN_SECRET =""
+      @ACCESS_TOKEN = "..........................................",
+      @ACCESS_TOKEN_SECRET = "............................................."
     )
   end
 
-#---------- ツイートする(発言内容) -----------
+#--------- ツイート---------
   def tweet( message )
     @access_token.post(
       '/statuses/update.rss',
@@ -29,7 +31,7 @@ class TwitterBot
     )
   end
 
-#---------- ツイート受信<+0000の時刻,発言内容,発言者>----------
+#--------- ツイート受信 <+0000の時刻,発言内容,発言者> ---------
   def get_tweet
     response = @access_token.get(
       '/statuses/friends_timeline.rss'
