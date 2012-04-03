@@ -26,7 +26,7 @@ class TwitterBot
 #--------- ツイート---------
   def tweet( message )
     @access_token.post(
-      '/statuses/update.rss',
+      '/statuses/update.xml',
       'status' => message
     )
   end
