@@ -5,21 +5,23 @@ require 'open-uri'
 require 'oauth'
 require 'rss'
 require 'cgi'
+require 'yaml'
 
 #--------- TwitterBot ---------
 class TwitterBot
 
   # ...の部分を適切な文字列に置き換える
   def initialize
+    yml_data = YAML.load_file('./setting.yml')
     @consumer = OAuth::Consumer.new(
-      @CONSUMER_KEY = ".......................................",
-      @CONSUMER_SECRET = ".....................................",
+      @CONSUMER_KEY = yml_data["consumer_key"],
+      @CONSUMER_SECRET = yml_data["consumer_secret"],
       :site => 'https://twitter.com'
     )
     @access_token = OAuth::AccessToken.new(
       @consumer,
-      @ACCESS_TOKEN = "..........................................",
-      @ACCESS_TOKEN_SECRET = "............................................."
+      @ACCESS_TOKEN = yml_data["access_token"],
+      @ACCESS_TOKEN_SECRET = yml_data["access_token_secret"]
     )
   end
 
