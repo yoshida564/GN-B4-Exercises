@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
-$KCODE = "UTF8"
-require 'rubygems'
-require 'open-uri'
 require 'oauth'
-require 'rss'
-require 'cgi'
+require 'json'
 require 'yaml'
 
 #--------- TwitterBot ---------
 class TwitterBot
 
-  # ...の部分を適切な文字列に置き換える
   def initialize
     yml_data = YAML.load_file('./setting.yml')
     @consumer = OAuth::Consumer.new(
       @CONSUMER_KEY = yml_data["consumer_key"],
       @CONSUMER_SECRET = yml_data["consumer_secret"],
-      :site => 'https://twitter.com'
+      :site => 'https://api.twitter.com/1.1'
     )
     @access_token = OAuth::AccessToken.new(
       @consumer,
@@ -25,35 +20,33 @@ class TwitterBot
     )
   end
 
-#--------- ツイート---------
+  #--------- ツイート---------
   def tweet( message )
     @access_token.post(
-      '/statuses/update.xml',
+      '/statuses/update.json',
       'status' => message
     )
   end
 
-#--------- ツイート受信 <+0000の時刻,発言内容,発言者> ---------
+  #--------- ツイート受信 <+0000の時刻,発言内容,発言者> ---------
   def get_tweet
     response = @access_token.get(
-      '/statuses/friends_timeline.rss'
+      '/statuses/home_timeline.json'
     )
 
-    sours = CGI.unescapeHTML(response.body).to_s
-    tweet = Array.new
-    time = Array.new
-    descriptions = Array.new
+    tweet_resource = JSON.parse(response.body)
 
-    time = sours.scan( /\<pubDate\>.*\<\/pubDate\>/ ).collect{|x| x.gsub( /\<.?pubDate\>/, "")}
-    descriptions = sours.scan( /\<description\>.*\<\/description\>/ ).collect{|x| x.gsub( /\<.?description\>/, "")}
-    descriptions.shift
+    tweets = Array.new
 
-    descriptions.each do |description|
-      description =~ /([^:]*):(.*)/
-      tweet << {"name" => $1, "message" => $2, "time" => time.shift}
+    tweet_resource.each do |tr|
+      tweets << {
+        "user_id" => tr["user"]["screen_name"],
+        "user_name" => tr["user"]["name"],
+        "message" => tr["text"],
+        "time" => tr["created_at"] }
     end
 
-    return tweet
+    return tweets
   end
 
 end
