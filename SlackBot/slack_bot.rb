@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-#! /usr/bin/env ruby
 
 require 'uri'
 require 'net/https'
