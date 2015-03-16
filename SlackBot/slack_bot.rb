@@ -7,34 +7,35 @@ require 'yaml'
 
 class SlackBot
 
-  def initialize
-    @params = YAML.load_file('./setting.yml')
+  def initialize(config_file_name = "setting.yml")
+    @config = YAML.load_file(config_file_name)
   end
 
-  def get_message
-    @params["count"] = 20
-    response = slack_api('channels.history', @params)
+  # See https://api.slack.com/methods for Slack API reference
+
+  def get_message(count = 20)
+    response = slack_api('channels.history', {"count" => count})
     message_resource = JSON.parse(response.body)
 
     return message_resource
   end
 
   def post_message(msg)
-    @params["text"] = msg
-    return slack_api('chat.postMessage', @params)
+    return slack_api('chat.postMessage', {"text" => msg})
   end
 
   private
-  def slack_api(method, params)
+
+  def slack_api(method, params = {})
     url = 'https://slack.com/api/' + method
-    headers = {  }
+    headers = {}
+    params = params.merge(@config)
     return get_request(url, params, headers)
   end
 
-  def get_request(url, params, headers = {  })
+  def get_request(url, params, headers = {})
     uri = URI.parse(url)
-    https = Net::HTTP.new(uri.host,uri.port)
-
+    https = Net::HTTP.new(uri.host, uri.port)
     https.use_ssl = true
 
     request = Net::HTTP::Post.new(uri.path)
