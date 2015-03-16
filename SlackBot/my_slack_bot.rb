@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-require './SlackBot.rb' # TwitterBot.rbの読み込み
+require 'slack_bot'
 
 #---------- MySlackBot ----------
 class MySlackBot < SlackBot
