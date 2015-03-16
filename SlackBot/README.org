@@ -1,0 +1,53 @@
+#+TITLE: SlackBot
+#+AUTHOR: Nomura Laboratory, Okayama University
+#+EMAIL:
+#+DATE:
+#+OPTIONS: H:3 num:2 toc:nil
+#+OPTIONS: ^:nil @:t \n:nil ::t |:t f:t TeX:t
+#+OPTIONS: skip:nil
+#+OPTIONS: author:t
+#+OPTIONS: email:nil
+#+OPTIONS: creator:nil
+#+OPTIONS: timestamp:nil
+#+OPTIONS: timestamps:nil
+#+OPTIONS: d:nil
+#+OPTIONS: tags:t
+#+TEXT:
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE: ja
+#+STARTUP: odd
+#+LATEX_CLASS: jsarticle
+#+LATEX_CLASS_OPTIONS: [a4j]
+# #+LATEX_HEADER: \usepackage{plain-article}
+# #+LATEX_HEADER: \renewcommand\maketitle{}
+# #+LATEX_HEADER: \pagestyle{empty}
+# #+LaTeX: \thispagestyle{empty}
+
+* SlackBot
+** 準備
+    1) Token取得
+     1) 自分のSlackアカウントへのログイン
+     2) [[https://api.slack.com/web][Slack Web API]]へアクセス
+     3) 「Create Token」をクリックしてTokenを発行
+    2) channelID取得
+     1) 取得したいchannelの「Add a service integration...」へアクセス
+     2) URLのchannelIDを取得\\
+        channnelIDは以下のURLのXXXXXXXXX部分
+        https://nomlab.slack.com/services/new?channel_id=XXXXXXXXX
+    3) 以下のコマンドを実行し，setting.yml.sampleをsetting.ymlに変更
+       : $ cp SlackBot/setting.yml.sample SlackBot/setting.yml
+    4) 発行されたTokenと発言したいchannelをsetting.ymlに書き込む
+       + token: XXXX-XXXXXXXXXX-XXXXXXXXXX-XXXXXXXXXX-XXXXXX
+       + channel: XXXXXXXXX
+** 実行
+    + 以下のコマンドで，MySlackBot.rb を実行
+       : $ ruby my_slack_bot.rb
+
+** Slack Methods
+   + SlackのMethod一覧を以下に示す．
+     https://api.slack.com/methods
+
+** 課題の詳細
+   + 課題の詳細はnompediaの新人研修課題に記載する．
+     https://github.com/nomlab/nompedia/wiki/Boot-Camp-2015-GN
