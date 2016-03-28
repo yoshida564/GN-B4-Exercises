@@ -1,0 +1,68 @@
+#+TITLE: SlackBot
+#+AUTHOR: Nomura Laboratory, Okayama University
+#+EMAIL:
+#+DATE:
+#+OPTIONS: H:3 num:2 toc:nil
+#+OPTIONS: ^:nil @:t \n:nil ::t |:t f:t TeX:t
+#+OPTIONS: skip:nil
+#+OPTIONS: author:t
+#+OPTIONS: email:nil
+#+OPTIONS: creator:nil
+#+OPTIONS: timestamp:nil
+#+OPTIONS: timestamps:nil
+#+OPTIONS: d:nil
+#+OPTIONS: tags:t
+#+TEXT:
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE: ja
+#+STARTUP: odd
+#+LATEX_CLASS: jsarticle
+#+LATEX_CLASS_OPTIONS: [a4j]
+# #+LATEX_HEADER: \usepackage{plain-article}
+# #+LATEX_HEADER: \renewcommand\maketitle{}
+# #+LATEX_HEADER: \pagestyle{empty}
+# #+LaTeX: \thispagestyle{empty}
+
+* SlackBot
+** Settings
+   + gemのインストール
+     + 以下のコマンドを実行し，gemをインストール\\
+       : $ bundle install --path vendor/bundle
+   + Incoming WebHooksの設定
+     + 自分のSlackアカウントにログイン
+     + [[https://nomlab.slack.com/apps/manage/custom-integrations][Custome Integrations]]へアクセス
+       + Slack画面左上の「nomlab」 -> 「Gets Slack Apps」 -> 左の欄の「Configure Apps」 -> 「Custom Integrations」
+     + 「Incoming WebHooks」をクリック
+     + 「Add Configuration」から，新たなIncoming WebHookを追加
+     + 送信するチャンネルを選択(WebHookを追加後にも変更可能)し，「Add Incoming WebHooks integration」をクリックし，Webhook URLを取得
+       + 必要であれば，Customize NameもしくはCustomize Iconを設定
+   + Outgoing WebHooksの設定
+     + [[https://nomlab.slack.com/apps/manage/custom-integrations][Custome Integrations]]へアクセスし，「Outgoing WebHooks」をクリック
+     + 「Add Configuration」から，新たなOutgoing WebHookを追加
+     + 「Add Outgoing WebHooks integration」をクリック
+     + Outgoing WebHookに関して以下を設定
+       + Channel: 発言を監視するchannel
+       + Trigger Word(s): WebHookが動作する契機となる単語
+       + URL(s): WebHookが動作した際にPOSTを行うURL
+     + 必要であれば，Customize NameもしくはCustomize Iconを設定
+   + 以下のコマンドを実行し，settings.yml.sampleをsettings.ymlに変更
+     : $ cp settings.yml.sample settings.yml
+   + 取得したIncomming WebHook URLをsettings.ymlに書き込む．
+     + incoming_webhook_url: https://XXXXXXXXXXXX
+
+** Run
+   + 以下のコマンドでMySlackBot.rbをローカルで実行する．
+     : $ bundle exec rackup config.ru
+
+** Test
+   + Slackや他のWebサービスのOutgoing WebHooksを用いた機能のテストをローカルで行いたい場合，testディレクトリ以下のpost_test.rbを利用すると良い．
+   + ローカルでMySlackBot.rbをデプロイし，post_test.rbを用いてWebサービスを装いテストする．
+   + 第1引数にPOST先URL，第2引数にPOSTするJSONが格納されているファイルパスを指定する．
+     : $ ruby test/post_test.rb http://localhost:<port>/<path> test/test.json
+   + 利用するWebHookがどのようなリクエストをPOSTするかを確認し，リクエスト例を用意する．
+   + リクエストのContent-TypeがJSONではない場合，post_test.rbに機能を追加し，JSON以外のContent-Typeを送れるように工夫する．
+
+** Details
+   + 課題の詳細はnompediaの新人研修課題に記載する．
+     https://github.com/nomlab/nompedia/wiki/Boot-Camp-2016-GN
